@@ -2,7 +2,7 @@ resources:
   - name: git
     type: git
     source:
-      uri: git@github.com:MERN-Stack-Dev-Group-graphQL/neighborly-server.git
+      uri: git@github.com:MERN-Stack-Dev-Group-graphQL/neighborly-client.git
       branch: dev
       private_key: ((private_key))
 
@@ -33,8 +33,8 @@ jobs:
             args:
               - -c
               - |
-                cd git &&
                 npm i &&
+                npm i react-scripts@3.4.1 -g &&
                 npm run build
       - task: deploy
         config:

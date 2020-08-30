@@ -10,10 +10,14 @@ import * as routes from "../constants/routes";
 import PageContainer from "./shared/components/PageContainer";
 import { createBrowserHistory } from "history";
 
+export const history = createBrowserHistory({
+  basename: process.env.PUBLIC_URL,
+});
+
 const App = () => (
   <AuthProvider>
     <PageContainer>
-      <Router>
+      <Router history={history}>
         <AuthRoute exact path={routes.LOGIN} component={Login} />
         <AuthRoute exact path={routes.REGISTER} component={Register} />
         <PublicRoute exact path={routes.HOME} component={Home} />
@@ -21,9 +25,5 @@ const App = () => (
     </PageContainer>
   </AuthProvider>
 );
-
-export const history = createBrowserHistory({
-  basename: process.env.PUBLIC_URL,
-});
 
 export default App;

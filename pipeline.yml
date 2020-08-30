@@ -24,8 +24,8 @@ jobs:
             - name: git
               path: .
           outputs:
-            - name: server
-              path: public
+            - name: client
+              path: build
           params:
             REACT_APP_SERVER_URL: ((REACT_APP_SERVER_URL))
           run:
@@ -45,7 +45,7 @@ jobs:
               repository: alpine
               tag: edge
           inputs:
-            - name: server
+            - name: client
               path: .
           params:
             AWS_ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))

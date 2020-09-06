@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import PhotoCarousel from '../../core/carousel/PhotoCarousel';
+import { NewsLetter } from '../../shared/components';
+import { PromoContainer } from '../../shared/components';
+import { FeaturedTools } from './tools/FeaturedTools';
 
 function Home() {
   return (
-    <div>
-      <div className='container'>
-        <div className='row'>
-          <div className='col-md-12'>
-            <h1>Home Page</h1>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Fragment>
+      <PhotoCarousel />
+      <FeaturedTools />
+      <PromoContainer />
+      <NewsLetter />
+    </Fragment>
   );
 }
 

@@ -2,12 +2,15 @@
 // Override default variables before the import
 
 $theme-colors: (
-  'primary': rgb(23, 162, 184),
+  'primary': rgb(0, 66, 128),
   'danger': #ff4136,
 );
 
 // Import Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap.scss';
+
+//Vendors
+@import 'vendors/__vendors-dir';
 
 //Abstracts
 @import 'abstracts/__abstracts-dir';

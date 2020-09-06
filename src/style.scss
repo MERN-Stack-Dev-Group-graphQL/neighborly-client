@@ -40,10 +40,41 @@
 }
 
 .page-title {
-  display: block !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   font-size: 2rem;
-  margin-top: 10px;
+
+  h1 {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--color-primary);
+    height: 50px;
+    font-size: var(--app-font-size-11);
+    color: var(--color-light);
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    &::before {
+      position: absolute;
+      content: '';
+      width: 8px;
+      height: 50px;
+      background: var(--color-primary);
+      transform: translateX(-28px);
+    }
+
+    &::after {
+      position: absolute;
+      content: '';
+      right: 0;
+      border-top: 50px solid var(--color-primary);
+      border-right: 50px solid transparent;
+      transform: translateX(100%);
+    }
+  }
 }
 
 .form-container {

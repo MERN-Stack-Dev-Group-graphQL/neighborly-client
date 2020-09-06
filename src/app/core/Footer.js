@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import brandLogo from '../../assets/img/brand/brand-logo-light.svg';
+import brandLogo from '../../assets/img/brand/brand-logo.svg';
+import { CATEGORIES } from '../../util/graphql/mock';
+import { FiPhone, FiMail, FiMapPin } from 'react-icons/fi';
+import { FaFacebookF, FaInstagram, FaYoutube, FaTwitter } from 'react-icons/fa';
+import { BsDot } from 'react-icons/bs';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -14,42 +18,77 @@ function Footer() {
               <div className='footer-category-wrapper'>
                 <h4 className='heading-4'>Categories</h4>
                 <ul>
-                  <li>Power Tools</li>
-                  <li>Handheld Tools</li>
-                  <li>Safety Gears</li>
-                  <li>Health & Wellness</li>
-                  <li>Carpentry</li>
-                  <li>Engineering</li>
-                  <li>Photography</li>
+                  {CATEGORIES.map((category, index) => (
+                    <li key={index}>
+                      <BsDot size={16} className='icons dot-icon' />
+                      <span>{category.name}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className='footer-contact-wrapper'>
                 <h4 className='heading-4'>Contact</h4>
                 <ul>
-                  <li>(646) 622-8635</li>
-                  <li>info@neighborly.com</li>
                   <li>
-                    Center City, Philadelphia
-                    <br />
-                    PA 19082, USA
+                    <FiPhone size={16} className='icons phone-icon' />
+                    <span>(646) 622-8635</span>
+                  </li>
+                  <li>
+                    <FiMail size={16} className='icons email-icon' />
+                    <span>info@neighborly.com</span>
+                  </li>
+                  <li>
+                    <FiMapPin size={16} className='icons address-icon' />
+                    <span>
+                      Center City, Philadelphia
+                      <br />
+                      PA 19082, USA
+                    </span>
                   </li>
                 </ul>
               </div>
               <div className='footer-information-wrapper'>
                 <h4 className='heading-4'>Information</h4>
                 <ul>
-                  <li>How does it work?</li>
-                  <li>FAQs</li>
-                  <li>Terms of Use</li>
-                  <li>Privacy & Legal</li>
-                  <li>Press</li>
-                  <li>Careers</li>
-                  <li>Contact Us</li>
+                  <li>
+                    <BsDot size={16} className='icons dot-icon' />
+                    <span>How does it work?</span>
+                  </li>
+                  <li>
+                    <BsDot size={16} className='icons dot-icon' />
+                    <span>FAQs</span>
+                  </li>
+                  <li>
+                    <BsDot size={16} className='icons dot-icon' />
+                    <span>Terms of Use</span>
+                  </li>
+                  <li>
+                    <BsDot size={16} className='icons dot-icon' />
+                    <span>Privacy & Legal</span>
+                  </li>
+                  <li>
+                    <BsDot size={16} className='icons dot-icon' />
+                    <span>Press</span>
+                  </li>
+                  <li>
+                    <BsDot size={16} className='icons dot-icon' />
+                    <span>Careers</span>
+                  </li>
+                  <li>
+                    <BsDot size={16} className='icons dot-icon' />
+                    <span>Contact Us</span>
+                  </li>
                 </ul>
               </div>
               <div className='footer-brand-wrapper'>
                 <img src={brandLogo} className='footer-brand' alt='Brand' />
                 <p className='lead'>We connect families to community-based services and resources.</p>
+                <div className='footer-social'>
+                  <FaFacebookF size={16} className='icons facebook-icon' />
+                  <FaInstagram size={16} className='icons instagram-icon' />
+                  <FaYoutube size={16} className='icons youtube-icon' />
+                  <FaTwitter size={16} className='icons twitter-icon' />
+                </div>
                 <hr />
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -69,10 +108,11 @@ function Footer() {
 
 export default Footer;
 
+// background: url(https://link-to-file.svg) no-repeat;
 const FooterWrapper = styled.div`
   position: relative;
   color: #ffffff;
-  background: var(--color-secondary-dark);
+  background: var(--color-secondary);
   padding: 7rem 1rem 3rem 1rem;
   border-radius: 0;
   margin-top: auto;
@@ -96,6 +136,11 @@ const FooterWrapper = styled.div`
     flex-direction: row;
     justify-content: space-between;
 
+    h4 {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
     .footer-category-wrapper,
     .footer-contact-wrapper,
     .footer-information-wrapper {
@@ -106,21 +151,40 @@ const FooterWrapper = styled.div`
         padding: 0;
 
         li {
+          position: relative;
           list-style: none;
           font-weight: 300;
-          font-weight: var(--app-font-weight-300);
+          font-size: 0.875rem;
+          padding-left: 24px;
           line-height: 1.8;
+          color: rgba(255, 255, 255, 0.75);
+          -webkit-font-smoothing: antialiased;
         }
       }
     }
 
     .footer-category-wrapper {
+      .icons {
+        position: absolute;
+        transform: translateX(-24px);
+        top: 5px;
+      }
     }
 
     .footer-contact-wrapper {
+      .icons {
+        position: absolute;
+        transform: translateX(-24px);
+        top: 5px;
+      }
     }
 
     .footer-information-wrapper {
+      .icons {
+        position: absolute;
+        transform: translateX(-24px);
+        top: 5px;
+      }
     }
 
     .footer-brand-wrapper {
@@ -139,14 +203,39 @@ const FooterWrapper = styled.div`
       }
 
       p {
-        color: #ffffff;
-        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.875rem;
+        font-weight: 300;
+        -webkit-font-smoothing: antialiased;
+      }
+    }
+  }
+
+  .footer-social {
+    display: flex;
+
+    .icons {
+      background: rgba(255, 255, 255, 0.9);
+      fill: var(--color-secondary);
+      stroke: var(--color-secondary);
+      height: 30px;
+      width: 30px;
+      border-radius: 5px;
+      margin-right: 16px;
+      padding: 5px;
+      transition: all 0.3s ease-in;
+
+      &:hover {
+        background: rgba(255, 255, 255, 1);
+        cursor: pointer;
       }
     }
   }
 
   .foot-note {
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.875rem;
     margin-top: 3rem;
+    -webkit-font-smoothing: antialiased;
   }
 `;

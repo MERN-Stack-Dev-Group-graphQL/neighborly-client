@@ -1,3 +1,12 @@
+groups:
+  - name: DEV
+    jobs:
+      - deploy-ui-to-dev
+
+  - name: QA
+    jobs:
+      - deploy-ui-to-qa
+
 resources:
   - name: git
     type: git
@@ -6,8 +15,15 @@ resources:
       branch: dev
       private_key: ((private_key))
 
+  - name: neighborly-ui-qa
+    type: git
+    source:
+      uri: git@github.com:MERN-Stack-Dev-Group-graphQL/neighborly-client.git
+      branch: qa
+      private_key: ((private_key))
+
 jobs:
-  - name: deploy-to-server
+  - name: deploy-ui-to-dev
     serial: true
     plan:
       - get: git
@@ -71,4 +87,70 @@ jobs:
                   --instance-os-user $AWS_INSTANCE_OS_USER \
                  --ssh-public-key file://aws_key.pub &&
                 rsync --progress -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i aws_key" \
-                  -arvz --delete ./ ec2-user@neighborly.tools:/var/www/neighborly.tools/client/
+                  -arvz --delete ./ ec2-user@neighborly.tools:/var/www/neighborly.tools/dev-client/
+
+  - name: deploy-ui-to-qa
+    serial: true
+    plan:
+      - get: neighborly-ui-qa
+        trigger: true
+      - task: build
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: node
+              tag: alpine
+          inputs:
+            - name: neighborly-ui-qa
+              path: .
+          outputs:
+            - name: client-qa
+              path: build
+          params:
+            REACT_APP_SERVER_URL: ((REACT_APP_SERVER_URL_QA))
+          run:
+            path: /bin/sh
+            args:
+              - -c
+              - |
+                npm i &&
+                npm i react-scripts@3.4.1 -g &&
+                npm run build
+      - task: deploy
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: alpine
+              tag: edge
+          inputs:
+            - name: client-qa
+              path: .
+          params:
+            AWS_ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
+            AWS_SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))
+            AWS_DEFAULT_REGION: ((AWS_DEFAULT_REGION))
+            AWS_REGION: ((AWS_REGION))
+            AWS_INSTANCE_ID: ((AWS_INSTANCE_ID))
+            AWS_AVAILABILITY_ZONE: ((AWS_AVAILABILITY_ZONE))
+            AWS_INSTANCE_OS_USER: ((AWS_INSTANCE_OS_USER))
+          run:
+            path: /bin/sh
+            args:
+              - -c
+              - |
+                apk update &&
+                apk add rsync openssh-client aws-cli &&
+                ssh-keygen -t rsa -f aws_key -q -N "" &&
+                chmod 600 aws_key &&
+                aws ec2-instance-connect send-ssh-public-key \
+                  --region $AWS_REGION \
+                  --instance-id $AWS_INSTANCE_ID \
+                  --availability-zone $AWS_AVAILABILITY_ZONE \
+                  --instance-os-user $AWS_INSTANCE_OS_USER \
+                 --ssh-public-key file://aws_key.pub &&
+                rsync --progress -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i aws_key" \
+                  -arvz --delete ./ ec2-user@neighborly.tools:/var/www/neighborly.tools/qa-client/

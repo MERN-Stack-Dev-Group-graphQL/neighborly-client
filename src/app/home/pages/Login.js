@@ -1,19 +1,19 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Form, Button } from 'semantic-ui-react';
-import { useMutation } from '@apollo/react-hooks';
-import { AuthContext } from '../../../context/auth';
-import { useForm } from '../../../util/hooks';
-import gql from 'graphql-tag';
-import * as routes from '../../../constants/routes';
+import React, { useContext, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Form, Button } from "semantic-ui-react";
+import { useMutation } from "@apollo/react-hooks";
+import { AuthContext } from "../../../context/auth";
+import { useForm } from "../../../util/hooks";
+import gql from "graphql-tag";
+import * as routes from "../../../constants/routes";
 
-import brandLogo from '../../../assets/img/brand/brand-logo.svg';
-import dotsTopLeft from '../../../assets/img/patterns/dots-left.svg';
-import dotsTopRight from '../../../assets/img/patterns/dots-right-top.svg';
-import dotsBottomLeft from '../../../assets/img/patterns/dots-left-bottom.svg';
-import dotsBottomRight from '../../../assets/img/patterns/dots-right.svg';
-import { MdArrowBack } from 'react-icons/md';
-import styled from 'styled-components';
+import brandLogo from "../../../assets/img/brand/brand-logo.svg";
+import dotsTopLeft from "../../../assets/img/patterns/dots-left.svg";
+import dotsTopRight from "../../../assets/img/patterns/dots-right-top.svg";
+import dotsBottomLeft from "../../../assets/img/patterns/dots-left-bottom.svg";
+import dotsBottomRight from "../../../assets/img/patterns/dots-right.svg";
+import { MdArrowBack } from "react-icons/md";
+import styled from "styled-components";
 
 function Login(props) {
   const context = useContext(AuthContext);
@@ -22,20 +22,23 @@ function Login(props) {
 
   const currentYear = new Date().getFullYear();
   const initialState = {
-    login: '',
-    password: '',
+    login: "",
+    password: "",
   };
 
-  const { handleChange, handleSubmit, values } = useForm(loginUserCallback, initialState);
+  const { handleChange, handleSubmit, values } = useForm(
+    loginUserCallback,
+    initialState
+  );
 
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
     update(__, { data: { login: userData } }) {
       context.login(userData);
-      props.history.push('/');
+      props.history.push("/");
     },
     onError(err) {
-      console.log(err.graphQLErrors[0].extensions.exception.errors);
-      setErrors(err.graphQLErrors[0].extensions.exception.errors);
+      if (err.graphQLErrors && err.graphQLErrors[0])
+        setErrors(err.graphQLErrors[0].extensions.exception.errors);
     },
     variables: values,
   });
@@ -53,46 +56,60 @@ function Login(props) {
   }
 
   return (
-    <div id='login-wrapper'>
+    <div id="login-wrapper">
       <LoginWrapper>
-        <div className='inner'>
-          <Link className='d-flex align-items-center justify-content-center' to={routes.HOME}>
-            <img className='brand-logo' alt='Neighborly Logo' src={brandLogo} />
+        <div className="inner">
+          <Link
+            className="d-flex align-items-center justify-content-center"
+            to={routes.HOME}
+          >
+            <img className="brand-logo" alt="Neighborly Logo" src={brandLogo} />
           </Link>
-          <Form onSubmit={handleSubmit} noValidate className={loading ? 'loading' : ''}>
-            <div className='title-header login-header'>Log in to Your Account</div>
+          <Form
+            onSubmit={handleSubmit}
+            noValidate
+            className={loading ? "loading" : ""}
+          >
+            <div className="title-header login-header">
+              Log in to Your Account
+            </div>
             <Form.Input
-              label='Username'
-              placeholder='Username...'
-              className='form-input'
-              name='login'
-              type='text'
-              autoComplete='username'
+              label="Username"
+              placeholder="Username..."
+              className="form-input"
+              name="login"
+              type="text"
+              autoComplete="username"
               value={values.login}
               error={errors.login ? true : false}
               onChange={handleChange}
             />
             <Form.Input
-              label='Password'
-              placeholder='Password...'
-              className='form-input'
-              name='password'
-              type='password'
-              autoComplete='new-password'
+              label="Password"
+              placeholder="Password..."
+              className="form-input"
+              name="password"
+              type="password"
+              autoComplete="new-password"
               value={values.password}
               error={errors.password ? true : false}
               onChange={handleChange}
             />
-            <Button disabled={disable} type='submit' className='form-button' primary>
+            <Button
+              disabled={disable}
+              type="submit"
+              className="form-button"
+              primary
+            >
               Login
             </Button>
-            <a href='/' className='forgot-password'>
+            <a href="/" className="forgot-password">
               Forgot password?
             </a>
           </Form>
           {Object.keys(errors).length > 0 && (
-            <div className='ui error message'>
-              <ul className='list'>
+            <div className="ui error message">
+              <ul className="list">
                 {Object.values(errors).map((value) => (
                   <li key={value}>{value}</li>
                 ))}
@@ -100,8 +117,8 @@ function Login(props) {
             </div>
           )}
 
-          <div className='or-divider'>
-            <hr className='hr--block' />
+          <div className="or-divider">
+            <hr className="hr--block" />
             <span>or</span>
           </div>
 
@@ -109,11 +126,13 @@ function Login(props) {
             Don’t have an account? Sign up <a href={routes.REGISTER}>here</a>.
           </p>
         </div>
-        <p className='text-center foot-note'>&copy; 2020 - {currentYear} Neighborly</p>
+        <p className="text-center foot-note">
+          &copy; 2020 - {currentYear} Neighborly
+        </p>
 
         {/* Back Home */}
-        <Link className='return-home-btn' to={routes.HOME}>
-          <MdArrowBack className='arrow-left' /> Return Home
+        <Link className="return-home-btn" to={routes.HOME}>
+          <MdArrowBack className="arrow-left" /> Return Home
         </Link>
       </LoginWrapper>
     </div>
@@ -137,7 +156,8 @@ const LoginWrapper = styled.div`
   flex-direction: column;
   justify-content: space-around;
   -webkit-box-pack: justify;
-  background-image: url(${dotsTopLeft}), url(${dotsTopRight}), url(${dotsBottomLeft}), url(${dotsBottomRight});
+  background-image: url(${dotsTopLeft}), url(${dotsTopRight}),
+    url(${dotsBottomLeft}), url(${dotsBottomRight});
   background-size: auto 300px;
   background-color: var(--color-secondary);
   background-repeat: no-repeat;

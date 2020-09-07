@@ -34,7 +34,7 @@ function ToolCard({ tool }) {
   }
 
   return (
-    <CardWrapper className='col-lg-4 col-md-6 col-sm-12'>
+    <CardWrapper className='mx-2'>
       <Card className='mb-3'>
         <div className='card-image-wrapper'>
           <CardImage url={tool.url} />

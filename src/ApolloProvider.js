@@ -1,14 +1,21 @@
 import React from 'react';
 import App from './app/App';
 import ApolloClient from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import { createUploadLink } from 'apollo-upload-client';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { setContext } from 'apollo-link-context';
 
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData: {
+    __schema: {
+      types: [],
+    },
+  },
+});
+
 const uploadLink = createUploadLink({
-  // uri: process.env.REACT_APP_SERVER_URL,
-  uri: 'http://localhost:4000/graphql',
+  uri: process.env.REACT_APP_SERVER_URL,
 });
 
 const authLink = setContext(() => {
@@ -22,7 +29,7 @@ const authLink = setContext(() => {
 
 const client = new ApolloClient({
   link: authLink.concat(uploadLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({ fragmentMatcher }),
 });
 
 export default (

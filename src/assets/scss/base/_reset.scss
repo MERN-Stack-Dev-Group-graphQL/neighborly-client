@@ -7,8 +7,13 @@
 body {
   counter-reset: my-sec-counter;
   font-family: var(--app-font-sans);
-  -webkit-font-smoothing: antialised;
-  color: var(--color-black);
+  font-family: Verlag A, Verlag B, -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  letter-spacing: 0.25px;
+  line-height: 1.65;
+  // -webkit-font-smoothing: antialised;
+  -webkit-font-smoothing: antialiased;
   margin: 0;
 }
 
@@ -62,7 +67,5 @@ a {
 p {
   font-size: 16px;
   font-size: var(--app-font-size-4);
-  line-height: 1.6;
-  color: var(--color-black);
-  -webkit-font-smoothing: antialiased;
+  line-height: 1.65;
 }

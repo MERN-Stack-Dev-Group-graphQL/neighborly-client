@@ -13,7 +13,7 @@ import Button from 'react-bootstrap/Button';
 import styled from 'styled-components';
 import brandLogo from '../../../assets/img/brand/brand-logo.svg';
 import avatarDefault from '../../../assets/img/avatars/avatar-default.png';
-import * as routes from '../../../constants/routes';
+import { userPrimaryMenus, userSecondaryMenus } from './menus';
 
 function UserNavigationBar({ user, logout, isMenuOpen, activeItem, menuHandler, overlayHandler }) {
   const findTools = () => {
@@ -28,57 +28,6 @@ function UserNavigationBar({ user, logout, isMenuOpen, activeItem, menuHandler, 
   if (data) {
     var tools = data;
   }
-
-  const primaryMenuItems = [
-    {
-      name: 'Tools',
-      link: '/tools',
-      Icon: '',
-    },
-    {
-      name: 'DIY Content',
-      link: '/do-it-yourself',
-      Icon: '',
-    },
-    {
-      name: 'Neighbors',
-      link: '/admin' + routes.NEIGHBORS,
-      Icon: '',
-    },
-    {
-      name: 'Cart',
-      link: routes.CART,
-      Icon: '',
-    },
-  ];
-
-  const secondaryMenuItems = [
-    {
-      name: 'Dashboard',
-      link: '/admin' + routes.DASHBOARD,
-      Icon: '',
-    },
-    {
-      name: 'FAQs',
-      link: '/faqs',
-      Icon: '',
-    },
-    {
-      name: 'Privacy Policy',
-      link: '/privacy-policy',
-      Icon: '',
-    },
-    {
-      name: 'Terms and Conditions',
-      link: '/terms-and-conditions',
-      Icon: '',
-    },
-    {
-      name: 'Contact Us',
-      link: '/contact',
-      Icon: '',
-    },
-  ];
 
   return (
     <Fragment>
@@ -129,8 +78,8 @@ function UserNavigationBar({ user, logout, isMenuOpen, activeItem, menuHandler, 
         </Navbar>
 
         <MenuBar
-          primaryMenuItems={primaryMenuItems}
-          secondaryMenuItems={secondaryMenuItems}
+          primaryMenuItems={userPrimaryMenus}
+          secondaryMenuItems={userSecondaryMenus}
           isMenuOpen={isMenuOpen}
           overlayHandler={overlayHandler}
         />

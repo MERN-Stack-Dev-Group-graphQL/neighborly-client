@@ -1,0 +1,19 @@
+#faqs-wrapper {
+  .heading-3 {
+    position: relative;
+    display: inline-block;
+    color: var(--color-light);
+    padding: 1.2rem 0;
+    margin: 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--color-primary);
+    }
+  }
+}

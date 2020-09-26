@@ -2,6 +2,7 @@ import React from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { Fade } from 'react-awesome-reveal';
 import styled from 'styled-components';
+import { Button } from '../../shared/components/Buttons';
 
 const carouselData = [
   {
@@ -39,6 +40,22 @@ const carouselData = [
 ];
 
 const PhotoCarousel = () => {
+  const ctaStyle = {
+    display: 'inline-block',
+    maxWidth: '100%',
+    minWidth: '180px',
+    height: 'auto',
+    padding: '15px 30px',
+    overflow: 'hidden',
+    borderRadius: '25px',
+    fontSize: '16px',
+    letterSpacing: '.1px',
+    lineHeight: '20px',
+    textOverflow: 'ellipsis',
+    textTransform: 'uppercase',
+    verticalAlign: 'middle',
+    whiteSpace: 'nowrap',
+  };
   return (
     <CarouselWrapper>
       <Carousel className='carousel-main-wrapper' fade={true} timeout={1000}>
@@ -53,6 +70,9 @@ const PhotoCarousel = () => {
                   <Fade delay={1200}>
                     <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                   </Fade>
+                  <Button buttonStyle='btn--primary' customStyle={ctaStyle} onClick={() => {}}>
+                    Learn more
+                  </Button>
                 </Fade>
               </div>
               <div className='caption-image'>
@@ -82,24 +102,15 @@ const CarouselWrapper = styled.div`
     z-index: 3;
   }
 
+  .carousel-indicators {
+    margin-bottom: 6%;
+  }
+
   .carousel-main-wrapper {
     position: relative;
-    background-color: #eef2f5;
+    background-color: #eaeaea;
     bottom: 0;
     z-index: 3;
-
-    &::after {
-      content: '';
-      background: -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.65)));
-      background: -o-linear-gradient(top, transparent 0, rgba(0, 0, 0, 0.65) 100%);
-      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.65));
-      opacity: 0.4;
-      height: 420px;
-      width: 100%;
-      position: absolute;
-      z-index: 4;
-      bottom: 0;
-    }
   }
 
   &::before {
@@ -119,18 +130,31 @@ const CarouselWrapper = styled.div`
   }
 
   .carousel-item {
-    height: 60vh;
-    min-height: 480px;
+    height: 80vh;
+    min-height: 550px;
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, transparent), to(#000));
     background: linear-gradient(180deg, transparent 0.75, #000);
     background: linear-gradient(180deg, rgba(255, 205, 57, 1), rgba(255, 194, 11, 1));
+
+    &::after {
+      content: '';
+      background: -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.65)));
+      background: -o-linear-gradient(top, transparent 0, rgba(0, 0, 0, 0.65) 100%);
+      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.65));
+      opacity: 0.4;
+      height: 420px;
+      width: 100%;
+      position: absolute;
+      z-index: 3;
+      bottom: 0;
+    }
   }
 
   .carousel-item .slider-background {
     position: absolute;
     top: 0;
     left: 0;
-    min-height: 600px;
+    min-height: 550px;
     opacity: 0.1;
   }
 

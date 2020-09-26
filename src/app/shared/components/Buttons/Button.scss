@@ -1,0 +1,139 @@
+.button {
+  padding: 8px 30px;
+  border-radius: 20px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.btn--primary {
+  background-color: var(--color-primary-light);
+  color: #f2f2f2;
+  border: 1px solid var(--color-primary-light);
+}
+
+.btn--outline {
+  background-color: transparent;
+  color: #f2f2f2;
+  padding: 8px 30px;
+  border: 1px solid #f2f2f2;
+  transition: all 0.3s ease-out;
+}
+
+.btn--small {
+  padding: 0 30px;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.btn--medium {
+  padding: 8px 30px;
+  font-size: 18px;
+  border-radius: 25px;
+}
+
+.btn--large {
+  padding: 12px 26px;
+  font-size: 20px;
+  border-radius: 30px;
+}
+
+.btn--mobile {
+  text-align: center;
+  border-radius: 4px;
+  width: 80%;
+  text-decoration: none;
+  font-size: 24px;
+  background-color: transparent;
+  color: #000000;
+  padding: 14px 20px;
+  border: 1px solid #000000;
+  transition: all 0.3s ease-out;
+}
+
+.btn--wide {
+  padding: 12px 64px;
+  font-size: 20px;
+}
+
+.btn--large,
+.btn--medium,
+.btn--mobile {
+  &:hover {
+    transition: all 0.3s ease-out;
+    background-color: var(--color-secondary);
+    color: #f2f2f2;
+  }
+}
+
+.btn--small {
+  &:hover {
+    transition: all 0.2s ease-out;
+    background-color: #f2f2f2;
+    color: var(--color-secondary);
+    border-color: #f2f2f2;
+  }
+}
+
+.btn--wide {
+  &:hover {
+    color: #f2f2f2;
+    background-color: #f00946;
+    transition: all 0.2s ease-out;
+  }
+}
+
+.btn--link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  padding: 8px 16px;
+  height: 100%;
+  width: 100%;
+}
+
+.primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+}
+
+.secondary {
+  background-color: var(--color-secondary);
+  color: #ffffff;
+  border: none;
+}
+
+.accent {
+  background-color: var(--color-accent);
+  color: #ffffff;
+  border: none;
+}
+
+.blue {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+}
+
+.yellow {
+  background-color: var(--color-accent);
+  color: #ffffff;
+  border: none;
+}
+
+.red {
+  background-color: #ef4b46;
+  color: #ffffff;
+  border: none;
+}
+
+.grey {
+  background-color: var(--color-grey);
+  color: #ffffff;
+  border: none;
+}

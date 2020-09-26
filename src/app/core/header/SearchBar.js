@@ -1,13 +1,8 @@
-import React, { Fragment, useState } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import React, { Fragment } from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import { SEARCH_TOOLS_QUERY } from '../../../util/graphql';
-import { useForm } from '../../../util/hooks';
 import { FiSearch } from 'react-icons/fi';
-
-import styled from 'styled-components';
 
 const SearchBar = () => {
   return (
@@ -33,8 +28,3 @@ const SearchBar = () => {
 };
 
 export default SearchBar;
-
-const AutoCompleteWrapper = styled.div`
-  display: block;
-  background: #ffffff;
-`;

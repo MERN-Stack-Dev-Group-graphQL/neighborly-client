@@ -4,39 +4,45 @@ export const FETCH_TOOLS_QUERY = gql`
   {
     getTools {
       edges {
-        _id
-        title
-        make
-        model
-        color
-        dimensions
-        weight
-        description
-        electricalRatings
-        price
-        unitOfMeasure
-        quantity
-        location {
-          address1
-          address2
-          city
-          country
-          countryCode
-          latitude
-          longitude
-          provinceCode
-          zip
-        }
-        category
-        userId
-        url
-        photo {
+        __typename
+        ... on Tool {
           _id
-          path
-          filename
-          mimetype
+          title
+          make
+          model
+          color
+          dimensions
+          weight
+          description
+          electricalRatings
+          price
+          unitOfMeasure
+          quantity
+          location {
+            address1
+            address2
+            city
+            country
+            countryCode
+            latitude
+            longitude
+            provinceCode
+            zip
+          }
+          category
+          userId
+          url
+          photo {
+            _id
+            path
+            filename
+            mimetype
+          }
+          createdAt
         }
-        createdAt
+        ... on ToolNotFound {
+          message
+        }
       }
       pageInfo {
         hasNextPage
@@ -49,53 +55,8 @@ export const FETCH_TOOLS_QUERY = gql`
 export const FETCH_TOOLS_BY_ID_QUERY = gql`
   query getToolById($toolId: ID!) {
     getToolById(toolId: $toolId) {
-      _id
-      title
-      make
-      model
-      color
-      dimensions
-      weight
-      description
-      electricalRatings
-      price
-      unitOfMeasure
-      quantity
-      location {
-        address1
-        address2
-        city
-        country
-        countryCode
-        latitude
-        longitude
-        provinceCode
-        zip
-      }
-      category
-      userId
-      user {
-        _id
-        username
-        firstName
-        lastName
-      }
-      url
-      photo {
-        _id
-        path
-        filename
-        mimetype
-      }
-      createdAt
-    }
-  }
-`;
-
-export const FETCH_TOOLS_BY_CATEGORY = gql`
-  query getToolsByCategory($category: String) {
-    getToolsByCategory(category: $category) {
-      edges {
+      __typename
+      ... on Tool {
         _id
         title
         make
@@ -121,6 +82,12 @@ export const FETCH_TOOLS_BY_CATEGORY = gql`
         }
         category
         userId
+        user {
+          _id
+          username
+          firstName
+          lastName
+        }
         url
         photo {
           _id
@@ -129,6 +96,57 @@ export const FETCH_TOOLS_BY_CATEGORY = gql`
           mimetype
         }
         createdAt
+      }
+      ... on ToolNotFound {
+        message
+      }
+    }
+  }
+`;
+
+export const FETCH_TOOLS_BY_CATEGORY = gql`
+  query getToolsByCategory($category: String) {
+    getToolsByCategory(category: $category) {
+      edges {
+        __typename
+        ... on Tool {
+          _id
+          title
+          make
+          model
+          color
+          dimensions
+          weight
+          description
+          electricalRatings
+          price
+          unitOfMeasure
+          quantity
+          location {
+            address1
+            address2
+            city
+            country
+            countryCode
+            latitude
+            longitude
+            provinceCode
+            zip
+          }
+          category
+          userId
+          url
+          photo {
+            _id
+            path
+            filename
+            mimetype
+          }
+          createdAt
+        }
+        ... on ToolNotFound {
+          message
+        }
       }
       pageInfo {
         hasNextPage
@@ -165,17 +183,23 @@ export const ADD_TOOL_MUTATION = gql`
 export const SEARCH_TOOLS_QUERY = gql`
   query searchTools($search: String) {
     searchTools(search: $search) {
-      _id
-      title
-      make
-      model
-      color
-      dimensions
-      weight
-      description
-      electricalRatings
-      category
-      userId
+      __typename
+      ... on Tool {
+        _id
+        title
+        make
+        model
+        color
+        dimensions
+        weight
+        description
+        electricalRatings
+        category
+        userId
+      }
+      ... on ToolNotFound {
+        message
+      }
     }
   }
 `;

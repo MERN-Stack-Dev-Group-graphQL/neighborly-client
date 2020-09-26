@@ -5,19 +5,27 @@ import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import { Button as NavButton } from '../../shared/components/Buttons';
 import { SEARCH_TOOLS_QUERY } from '../../../util/graphql';
 import { useForm } from '../../../util/hooks';
 import { FiSearch } from 'react-icons/fi';
+import { RiCloseLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { MdShoppingCart } from 'react-icons/md';
 import MenuBar from './MenuBar';
 import styled from 'styled-components';
 import * as routes from '../../../constants/routes';
+import { guestPrimaryMenus, guestSecondaryMenus } from './menus';
 
 function GuestNavigationBar({ brandLogo, isMenuOpen, activeItem, handleItemClick, menuHandler, overlayHandler }) {
+  // const [search, setSearch] = useState('');
   const findTools = () => {
     console.log('find tools ran', values.search ? values.search : 'nothing to see here');
   };
+
+  const handleClear = () => {};
+  const locationTitle = 'Philadelphia';
+
   const initialState = { search: '' };
   const { handleChange, handleSubmit, values } = useForm(findTools, initialState);
   const { data } = useQuery(SEARCH_TOOLS_QUERY, {
@@ -28,52 +36,6 @@ function GuestNavigationBar({ brandLogo, isMenuOpen, activeItem, handleItemClick
     var tools = data;
   }
 
-  const primaryMenuItems = [
-    {
-      name: 'Tools',
-      link: '/tools',
-      Icon: '',
-    },
-    {
-      name: 'Neighbors',
-      link: '/neighbors',
-      Icon: '',
-    },
-    {
-      name: 'Cart',
-      link: '/cart',
-      Icon: '',
-    },
-  ];
-
-  const secondaryMenuItems = [
-    {
-      name: 'Dashboard',
-      link: '/login',
-      Icon: '',
-    },
-    {
-      name: 'FAQs',
-      link: '/faqs',
-      Icon: '',
-    },
-    {
-      name: 'Privacy Policy',
-      link: '/privacy-policy',
-      Icon: '',
-    },
-    {
-      name: 'Terms and Conditions',
-      link: '/terms-and-conditions',
-      Icon: '',
-    },
-    {
-      name: 'Contact Us',
-      link: '/contact',
-      Icon: '',
-    },
-  ];
-
   return (
     <Fragment>
       <NavigationWrapper>
@@ -82,37 +44,36 @@ function GuestNavigationBar({ brandLogo, isMenuOpen, activeItem, handleItemClick
             <img src={brandLogo} className='brand-logo' alt='Neighborly' />
           </Navbar.Brand>
           <Form inline onSubmit={handleSubmit} className='p-2 flex-grow-1 nav-search-wrapper'>
-            <FormControl
-              type='text'
-              name='search'
-              autoComplete='off'
-              onChange={handleChange}
-              value={values.search}
-              placeholder='Find a tool...'
-              className='mr-sm-2 nav-search-input'
-              id='search-input'
-              required
-            />
+            <div className='mr-sm-2 nav-search-input__wrapper'>
+              <FormControl
+                type='text'
+                name='search'
+                autoComplete='off'
+                onChange={handleChange}
+                value={values.search}
+                placeholder={`Find a tool in ${locationTitle}`}
+                className='nav-search-input'
+                id='search-input'
+                required
+              />
+              <button type='button' className='btn-clear' onClick={handleClear}>
+                <RiCloseLine size={24} />
+              </button>
+            </div>
             <Button type='submit' variant='info' className='nav-search-btn'>
               <FiSearch />
             </Button>
           </Form>
           <Nav className='ml-auto nav-menubar-wrapper'>
-            <Nav.Link
-              href={routes.LOGIN}
-              active={activeItem === 'login'}
-              onClick={handleItemClick}
-              className='btn btn-outline-light btn-login mr-2'
-            >
-              Login
+            <Nav.Link href={routes.LOGIN} active={activeItem === 'login'}>
+              <NavButton buttonStyle='btn--outline' buttonSize='btn--small'>
+                Login
+              </NavButton>
             </Nav.Link>
-            <Nav.Link
-              href={routes.REGISTER}
-              active={activeItem === 'register'}
-              onClick={handleItemClick}
-              className='btn btn-outline-light btn-register mr-4'
-            >
-              Register
+            <Nav.Link href={routes.REGISTER} active={activeItem === 'register'} className='mr-4'>
+              <NavButton buttonStyle='btn--outline' buttonSize='btn--small'>
+                Register
+              </NavButton>
             </Nav.Link>
             <Nav.Link href={routes.CART} className='nav-cart-icon'>
               <span className='cart-pill'>3</span>
@@ -131,28 +92,30 @@ function GuestNavigationBar({ brandLogo, isMenuOpen, activeItem, handleItemClick
         </Navbar>
 
         <MenuBar
-          primaryMenuItems={primaryMenuItems}
-          secondaryMenuItems={secondaryMenuItems}
+          primaryMenuItems={guestPrimaryMenus}
+          secondaryMenuItems={guestSecondaryMenus}
           isMenuOpen={isMenuOpen}
           overlayHandler={overlayHandler}
         />
       </NavigationWrapper>
       {tools ? (
         <AutoCompleteWrapper>
-          <div className='container'>
-            <div className='row'>
-              <ul className='search-results-dropdown'>
-                {tools &&
-                  tools.searchTools.map((tool, index) => (
-                    <li className='form-option' key={index}>
-                      <Link className='btn-search-link' to={`/tool-detail/${tool._id}`}>
-                        <span>{tool.make}:</span> {tool.title}
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
+          {values.search !== '' && (
+            <div className='container'>
+              <div className='row'>
+                <ul className='search-results-dropdown'>
+                  {tools &&
+                    tools.searchTools.map((tool, index) => (
+                      <li className='form-option' key={index}>
+                        <Link className='btn-search-link' to={`/tool-detail/${tool._id}`}>
+                          <span>{tool.make}:</span> {tool.title}
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </div>
             </div>
-          </div>
+          )}
         </AutoCompleteWrapper>
       ) : (
         ''
@@ -233,9 +196,32 @@ const NavigationWrapper = styled.div`
       margin: 0;
     }
 
+    .nav-search-input__wrapper {
+      position: relative;
+      display: flex;
+      flex-grow: 1;
+      align-items: center;
+      width: 80%;
+
+      .btn-clear {
+        position: absolute;
+        color: rgba(0, 0, 0, 0.25);
+        background: transparent;
+        right: 10px;
+        transition: all 0.3s ease-in;
+        border: none;
+        z-index: 3;
+
+        &:hover {
+          cursor: pointer;
+          color: rgba(0, 0, 0, 0.85);
+        }
+      }
+    }
+
     .nav-search-input {
       height: 50px;
-      width: 80%;
+      width: 100%;
       padding: 0.375rem 1.75rem;
       border-radius: 25px 0 0 25px;
       border: none;
@@ -261,19 +247,6 @@ const NavigationWrapper = styled.div`
       height: 50px;
       line-height: 50px;
       padding: 0 0.75rem;
-    }
-
-    .btn-login,
-    .btn-register {
-      font-size: 14px;
-      font-size: var(--app-font-size-3);
-      background: #dcdfe3;
-      color: #1d2329;
-
-      &:hover {
-        background: #ffffff;
-        color: #1d2329;
-      }
     }
 
     .nav-cart-icon {

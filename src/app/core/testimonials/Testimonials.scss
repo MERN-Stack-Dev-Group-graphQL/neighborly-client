@@ -1,0 +1,23 @@
+#testimonials {
+  padding: 120px 0;
+}
+
+.testimonials--wrapper {
+  .owl-theme {
+    .item {
+      text-align: center;
+
+      .author {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+      .star-ratings {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+      .comment {
+      }
+    }
+  }
+}

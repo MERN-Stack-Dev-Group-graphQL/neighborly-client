@@ -7,8 +7,6 @@ const HeroSection = ({ lightBg, topLine, lightText, lightTextDescription, headli
   return (
     <>
       <div className={lightBg ? 'home__hero-section' : 'home__hero-section darkBg'}>
-        {/*         <div className={`home__hero-triangle ${imgStart === 'start' ? 'triangle-right' : 'triangle-left'}`}></div>
-         */}
         <div className='hero-container'>
           <div className='row home__hero-row' style={{ display: 'flex', flexDirection: imgStart === 'start' ? 'row-reverse' : 'row' }}>
             <div className='column'>

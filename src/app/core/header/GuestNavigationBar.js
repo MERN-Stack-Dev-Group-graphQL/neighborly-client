@@ -18,7 +18,6 @@ import * as routes from '../../../constants/routes';
 import { guestPrimaryMenus, guestSecondaryMenus } from './menus';
 
 function GuestNavigationBar({ brandLogo, isMenuOpen, activeItem, handleItemClick, menuHandler, overlayHandler }) {
-  // const [search, setSearch] = useState('');
   const findTools = () => {
     console.log('find tools ran', values.search ? values.search : 'nothing to see here');
   };

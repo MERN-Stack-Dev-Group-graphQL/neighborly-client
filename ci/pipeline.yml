@@ -1,12 +1,3 @@
-resource_types:
-  - name: terraform
-    type: registry-image
-    source:
-      repository: ljfranklin/terraform-resource
-      username: ((DOCKER_USER))
-      password: ((DOCKER_PASS))
-      tag: latest
-
 resources:
   - name: git
     type: git
@@ -14,38 +5,24 @@ resources:
       uri: git@github.com:MERN-Stack-Dev-Group-graphQL/neighborly-client.git
       branch: master
       private_key: ((private_key))
-  - name: terraform-resource
-    type: terraform
-    source:
-      backend_type: s3
-      env_name: dev
-      backend_config:
-        bucket: neighborly.tools.ui.terraform
-        key: terraform.tfstate
-        region: us-east-1
-      env:
-        AWS_ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
-        AWS_SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))
-  - name: s3-ui
-    type: s3
-    source:
-      bucket: app.neighborly.tools      
-      access_key_id: ((AWS_ACCESS_KEY_ID))
-      secret_access_key: ((AWS_SECRET_ACCESS_KEY))
+#   - name: s3-ui-deploy
+#     type: s3
+#     source:
+#       bucket: app.neighborly.tools      
+#       access_key_id: ((AWS_ACCESS_KEY_ID))
+#       secret_access_key: ((AWS_SECRET_ACCESS_KEY))
   - name: s3-ui-build
     type: s3
     source:
       bucket: neighborly.tools.build      
+      versioned_file: neighborly-client.tar.gz
       access_key_id: ((AWS_ACCESS_KEY_ID))
       secret_access_key: ((AWS_SECRET_ACCESS_KEY))
 jobs:
-  - name: terraform-infrastructure
+  - name: neighborly-client
     plan:
       - get: git
-        trigger: true
-      - put: terraform-resource
-        params:
-          terraform_source: git/ci/terraform/
+        trigger: true      
       - task: build
         config:
           platform: linux
@@ -55,7 +32,7 @@ jobs:
               repository: node
               username: ((DOCKER_USER))
               password: ((DOCKER_PASS))
-              tag: alpine
+              tag: 14.15.1-alpine3.11
           inputs:
             - name: git
           outputs:
@@ -68,16 +45,50 @@ jobs:
             args:
               - -xc
               - |
-                cd git &&                
+                ls -a
+                which node
+                node -v
+                cd git                               
                 npm i &&
                 echo "$NEIGHBORLY_ENV" >> .env
-                npm run build
+                npm i react-scripts@3.4.1 -g                
+                npm install node-sass -g
+                ls -a
+                npm run-script build
                 pwd
                 ls -a
-                tar -zcvf neighborly-server.tar.gz -C ./build .                                
-      - put: s3-ui
-        params:
-          file: client/build
+                tar -zcvf neighborly-client.tar.gz -C build . 
+                ls                               
       - put: s3-ui-build
         params:
-          file: client/neighborly-server.tar.gz     
+          file: client/neighborly-client.tar.gz
+      - task: deploy
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: ubuntu
+          inputs:
+            - name: s3-ui-build
+              path: .
+          params:
+            unpack: true
+            ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
+            SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))
+          run:
+            path: /bin/sh
+            args:
+              - -xc
+              - |
+                apt-get update &&
+                DEBIAN_FRONTEND=noninteractive apt-get -y install awscli
+                export AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID ; export AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
+                mkdir client && tar -xvf neighborly-client.tar.gz -C /client
+                ls -la
+                aws s3 ls
+                
+                # aws s3 cp
+
+
+

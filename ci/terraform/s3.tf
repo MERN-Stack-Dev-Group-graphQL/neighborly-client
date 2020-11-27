@@ -12,6 +12,10 @@ provider "aws" {
   region = "us-east-1"
 }
 
+variable "s3_bucket_name" {
+    type = "list"
+    default = ["app.neighborly.tools","neighborly.tools.build"]
+}
 resource "aws_s3_bucket" "b" {
   bucket = "app.neighborly.tools"
   acl    = "public-read"

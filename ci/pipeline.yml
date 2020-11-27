@@ -1,0 +1,83 @@
+resource_types:
+  - name: terraform
+    type: registry-image
+    source:
+      repository: ljfranklin/terraform-resource
+      username: ((DOCKER_USER))
+      password: ((DOCKER_PASS))
+      tag: latest
+
+resources:
+  - name: git
+    type: git
+    source:
+      uri: git@github.com:MERN-Stack-Dev-Group-graphQL/neighborly-client.git
+      branch: master
+      private_key: ((private_key))
+  - name: terraform-resource
+    type: terraform
+    source:
+      backend_type: s3
+      env_name: dev
+      backend_config:
+        bucket: neighborly.tools.ui.terraform
+        key: terraform.tfstate
+        region: us-east-1
+      env:
+        AWS_ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
+        AWS_SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))
+  - name: s3-ui
+    type: s3
+    source:
+      bucket: app.neighborly.tools      
+      access_key_id: ((AWS_ACCESS_KEY_ID))
+      secret_access_key: ((AWS_SECRET_ACCESS_KEY))
+  - name: s3-ui-build
+    type: s3
+    source:
+      bucket: neighborly.tools.build      
+      access_key_id: ((AWS_ACCESS_KEY_ID))
+      secret_access_key: ((AWS_SECRET_ACCESS_KEY))
+jobs:
+  - name: terraform-infrastructure
+    plan:
+      - get: git
+        trigger: true
+      - put: terraform-resource
+        params:
+          terraform_source: git/ci/terraform/
+      - task: build
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: node
+              username: ((DOCKER_USER))
+              password: ((DOCKER_PASS))
+              tag: alpine
+          inputs:
+            - name: git
+          outputs:
+            - name: client
+              path: git
+          params:
+            NEIGHBORLY_ENV: ((neighborly_env))
+          run:
+            path: /bin/sh
+            args:
+              - -xc
+              - |
+                cd git &&                
+                npm i &&
+                echo "$NEIGHBORLY_ENV" >> .env
+                npm run build
+                pwd
+                ls -a
+                tar -zcvf neighborly-server.tar.gz -C ./build .                                
+      - put: s3-ui
+        params:
+          file: client/build
+      - put: s3-ui-build
+        params:
+          file: client/neighborly-server.tar.gz     

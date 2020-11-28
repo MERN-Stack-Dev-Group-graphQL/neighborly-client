@@ -19,7 +19,7 @@ resources:
       access_key_id: ((AWS_ACCESS_KEY_ID))
       secret_access_key: ((AWS_SECRET_ACCESS_KEY))
 jobs:
-  - name: neighborly-client
+  - name: neighborly-client-dev
     plan:
       - get: git
         trigger: true      
@@ -75,7 +75,7 @@ jobs:
           params:
             unpack: true
             ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
-            SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))
+            SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))                   
           run:
             path: /bin/sh
             args:
@@ -84,11 +84,75 @@ jobs:
                 apt-get update &&
                 DEBIAN_FRONTEND=noninteractive apt-get -y install awscli
                 export AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID ; export AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
-                mkdir client && tar -xvf neighborly-client.tar.gz -C /client
+                mkdir client && tar -xvf neighborly-client.tar.gz -C client .
                 ls -la
-                aws s3 ls
-                
-                # aws s3 cp
-
-
-
+                aws s3 ls                
+                aws s3 sync ./client s3://dev.neighborly.tools      
+  - name: neighborly-client-staging
+    plan:
+      - get: s3-ui-build
+        trigger: true
+        passed: [neighborly-client-dev]      
+      - task: deploy
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: ubuntu
+          inputs:
+            - name: s3-ui-build
+              path: .
+          params:
+            unpack: true
+            ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
+            SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))         
+          run:
+            path: /bin/sh
+            args:
+              - -xc
+              - |
+                apt-get update &&
+                DEBIAN_FRONTEND=noninteractive apt-get -y install awscli
+                export AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID ; export AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
+                mkdir client
+                pwd
+                ls -la
+                tar -xvf neighborly-client.tar.gz -C client .
+                ls -la client
+                aws s3 ls                
+                aws s3 sync client s3://staging.neighborly.tools
+  - name: neighborly-client-prod
+    plan:
+      - get: s3-ui-build
+        trigger: true
+        passed: [neighborly-client-staging]      
+      - task: deploy
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: ubuntu
+          inputs:
+            - name: s3-ui-build
+              path: .
+          params:
+            unpack: true
+            ACCESS_KEY_ID: ((AWS_ACCESS_KEY_ID))
+            SECRET_ACCESS_KEY: ((AWS_SECRET_ACCESS_KEY))         
+          run:
+            path: /bin/sh
+            args:
+              - -xc
+              - |
+                apt-get update &&
+                DEBIAN_FRONTEND=noninteractive apt-get -y install awscli
+                export AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID ; export AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
+                mkdir client
+                pwd
+                ls -la
+                tar -xvf neighborly-client.tar.gz -C client .
+                ls -la client
+                aws s3 ls                
+                aws s3 sync client s3://app.neighborly.tools

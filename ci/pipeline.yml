@@ -90,8 +90,7 @@ jobs:
                 aws s3 sync ./client s3://dev.neighborly.tools      
   - name: neighborly-client-staging
     plan:
-      - get: s3-ui-build
-        trigger: true
+      - get: s3-ui-build        
         passed: [neighborly-client-dev]      
       - task: deploy
         config:
@@ -124,8 +123,7 @@ jobs:
                 aws s3 sync client s3://staging.neighborly.tools
   - name: neighborly-client-prod
     plan:
-      - get: s3-ui-build
-        trigger: true
+      - get: s3-ui-build        
         passed: [neighborly-client-staging]      
       - task: deploy
         config:
